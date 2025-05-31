@@ -38,7 +38,7 @@ pipeline {
                     -Dsonar.projectKey=backend-test \\
                     -Dsonar.sources=app,routes,database \\
                     -Dsonar.php.coverage.reportPaths=storage/logs/clover.xml \\
-                    -Dsonar.host.url=http://tu_sonarqube_url:9000
+                    -Dsonar.host.url=http://docker.sonar:9000/
                     """
                 }
             }
