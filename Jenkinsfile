@@ -1,23 +1,16 @@
 pipeline {
-    agent {
-        docker {
-            image 'composer:2'                  // Usa la imagen oficial con PHP y Composer
-            args '-v $PWD:/app'                // Monta el workspace en /app dentro del contenedor
-        }
-    }
+    agent any  // No necesitas Docker con Composer porque ya tienes vendor/ en el repo
 
     environment {
-        SONARQUBE = 'sonarqube'               // Nombre configurado en Jenkins para SonarQube
+        SONARQUBE = 'sonarqube'  // Configuración SonarQube
     }
 
     stages {
         stage('Clone') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    git branch: 'main',
-                        credentialsId: 'githubtoken1',      // Cambia por el ID real de tu credencial GitHub en Jenkins
-                        url: 'https://github.com/maykolaracayo22/backend-test.git'
-                }
+                git branch: 'main',
+                    credentialsId: 'githubtoken1',
+                    url: 'https://github.com/maykolaracayo22/backend-test.git'
             }
         }
 
@@ -29,9 +22,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    sh 'cd reservasback && ./vendor/bin/phpunit --configuration phpunit.xml'
-                }
+                sh 'cd reservasback && ./vendor/bin/phpunit --configuration phpunit.xml'
             }
         }
 
@@ -40,26 +31,22 @@ pipeline {
                 scannerHome = tool 'SonarQubeScanner'
             }
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    withSonarQubeEnv(SONARQUBE) {
-                        sh """
-                        cd reservasback && \\
-                        ${scannerHome}/bin/sonar-scanner \\
-                        -Dsonar.projectKey=backend-test \\
-                        -Dsonar.sources=app,routes,database \\
-                        -Dsonar.php.coverage.reportPaths=storage/logs/clover.xml \\
-                        -Dsonar.host.url=http://tu_sonarqube_url:9000
-                        """
-                    }
+                withSonarQubeEnv(SONARQUBE) {
+                    sh """
+                    cd reservasback && \\
+                    ${scannerHome}/bin/sonar-scanner \\
+                    -Dsonar.projectKey=backend-test \\
+                    -Dsonar.sources=app,routes,database \\
+                    -Dsonar.php.coverage.reportPaths=storage/logs/clover.xml \\
+                    -Dsonar.host.url=http://tu_sonarqube_url:9000
+                    """
                 }
             }
         }
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
+                waitForQualityGate abortPipeline: true
             }
         }
 
