@@ -23,9 +23,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    sh 'cd reservasback && composer install --no-interaction --prefer-dist --optimize-autoloader'
-                }
+                echo 'Saltando instalación de dependencias porque vendor/ está en el repo'
             }
         }
 
