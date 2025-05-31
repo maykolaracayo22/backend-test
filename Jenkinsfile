@@ -35,7 +35,7 @@ pipeline {
                     sh """
                     cd reservasback && \\
                     ${scannerHome}/bin/sonar-scanner \\
-                    -Dsonar.projectKey=reservasback \\
+                    -Dsonar.projectKey=backend-test \\
                     -Dsonar.sources=app,routes,database \\
                     """
                 }
