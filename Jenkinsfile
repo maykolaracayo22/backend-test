@@ -1,9 +1,13 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'composer:2'                  // Usa la imagen oficial con PHP y Composer
+            args '-v $PWD:/app'                // Monta el workspace en /app dentro del contenedor
+        }
+    }
 
     environment {
-        // Define la herramienta SonarQube configurada en Jenkins
-        SONARQUBE = 'sonarqube'
+        SONARQUBE = 'sonarqube'               // Nombre configurado en Jenkins para SonarQube
     }
 
     stages {
@@ -11,7 +15,7 @@ pipeline {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
                     git branch: 'main',
-                        credentialsId: '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',
+                        credentialsId: 'githubtoken1',      // Cambia por el ID real de tu credencial GitHub en Jenkins
                         url: 'https://github.com/maykolaracayo22/backend-test.git'
                 }
             }
@@ -46,8 +50,7 @@ pipeline {
                         -Dsonar.projectKey=backend-test \\
                         -Dsonar.sources=app,routes,database \\
                         -Dsonar.php.coverage.reportPaths=storage/logs/clover.xml \\
-                        -Dsonar.host.url=http://tu_sonarqube_url:9000 \\
-                        -Dsonar.login=tu_sonar_token
+                        -Dsonar.host.url=http://tu_sonarqube_url:9000
                         """
                     }
                 }
