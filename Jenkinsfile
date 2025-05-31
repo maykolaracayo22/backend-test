@@ -31,14 +31,13 @@ pipeline {
                 scannerHome = tool 'SonarQubeScanner'
             }
             steps {
-                withSonarQubeEnv(SONARQUBE) {
+                withSonarQubeEnv(sonarqube) {
                     sh """
                     cd reservasback && \\
                     ${scannerHome}/bin/sonar-scanner \\
                     -Dsonar.projectKey=backend-test \\
                     -Dsonar.sources=app,routes,database \\
                     -Dsonar.php.coverage.reportPaths=storage/logs/clover.xml \\
-                    -Dsonar.host.url=http://docker.sonar:9000/
                     """
                 }
             }
