@@ -35,9 +35,8 @@ pipeline {
                     sh """
                     cd reservasback && \\
                     ${scannerHome}/bin/sonar-scanner \\
-                    -Dsonar.projectKey=backend-test \\
+                    -Dsonar.projectKey=reservasback \\
                     -Dsonar.sources=app,routes,database \\
-                    -Dsonar.php.coverage.reportPaths=storage/logs/clover.xml \\
                     """
                 }
             }
