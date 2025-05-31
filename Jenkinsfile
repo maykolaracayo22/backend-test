@@ -1,6 +1,10 @@
 pipeline {
-    agent any
-
+    agent {
+        docker {
+            image 'composer:2'                  // Usa la imagen oficial con PHP y Composer
+            args '-v $PWD:/app'                // Monta el workspace en /app dentro del contenedor
+        }
+    }
 
     environment {
         SONARQUBE = 'sonarqube'               // Nombre configurado en Jenkins para SonarQube
