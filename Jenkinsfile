@@ -22,7 +22,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'cd reservasback && ./vendor/bin/phpunit --configuration phpunit.xml'
+                sh 'cd reservasback chmod +x ./vendor/bin/phpunit ./vendor/bin/phpunit --configuration phpunit.xml'
             }
         }
 
